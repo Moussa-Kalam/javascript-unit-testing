@@ -1,6 +1,7 @@
 import { it, expect, describe } from 'vitest';
 import {
   calculateDiscount,
+  canDrive,
   getCoupons,
   isPriceInRange,
   isValidUsername,
@@ -121,18 +122,31 @@ describe('isPriceinRange', () => {
 
 describe('isValidUserName', () => {
   const minlength = 5;
-  const maxLength = 15
+  const maxLength = 15;
 
   it('should return false if username is too short', () => {
-    expect(isValidUsername('M'.repeat(minlength -1))).toBe(false);
+    expect(isValidUsername('M'.repeat(minlength - 1))).toBe(false);
   });
 
   it('should return false if username is too long', () => {
-    expect(isValidUsername("M".repeat(maxLength + 1))).toBe(false)
-  })
+    expect(isValidUsername('M'.repeat(maxLength + 1))).toBe(false);
+  });
 
   it('should return true if username length is equal to min or max', () => {
-    expect(isValidUsername("a".repeat(minlength))).toBe(true);
-    expect(isValidUsername("a".repeat(maxLength))).toBe(true)
-  })
+    expect(isValidUsername('a'.repeat(minlength))).toBe(true);
+    expect(isValidUsername('a'.repeat(maxLength))).toBe(true);
+  });
+});
+
+describe('canDrive', () => {
+  it.each([
+    { age: 15, country: 'US', result: false },
+    { age: 16, country: 'US', result: true },
+    { age: 17, country: 'US', result: true },
+    { age: 16, country: 'UK', result: false },
+    { age: 17, country: 'UK', result: true },
+    { age: 18, country: 'UK', result: true },
+  ])('should return $result for $age, $country', ({ age, country, result }) => {
+    expect(canDrive(age, country)).toBe(result);
+  });
 });
