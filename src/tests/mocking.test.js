@@ -7,14 +7,14 @@ import {
   login,
   renderPage,
   signUp,
-  submitOrder,
+  submitOrder
 } from '../mocking';
 import { getExchangeRate } from '../libs/currency';
 import { getShippingQuote } from '../libs/shipping';
 import { trackPageView } from '../libs/analytics';
 import { charge } from '../libs/payment';
 import { isValidEmail, sendEmail } from '../libs/email';
-import security, { generateCode } from '../libs/security';
+import security from '../libs/security';
 
 vi.mock('../libs/currency');
 vi.mock('../libs/shipping');
@@ -24,7 +24,7 @@ vi.mock('../libs/email', async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
     ...originalModule,
-    sendEmail: vi.fn(),
+    sendEmail: vi.fn()
   };
 });
 
@@ -128,7 +128,7 @@ describe('signUp', () => {
   });
 
   it('should send the welcome email if email is valid', async () => {
-    const result = await signUp(email);
+    await signUp(email);
 
     expect(sendEmail).toHaveBeenCalledOnce();
 
