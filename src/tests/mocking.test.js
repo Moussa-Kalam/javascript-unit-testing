@@ -2,6 +2,7 @@ import { vi, it, expect, describe } from 'vitest';
 import {
   getPriceInCurrency,
   getShippingInfo,
+  login,
   renderPage,
   signUp,
   submitOrder,
@@ -11,6 +12,7 @@ import { getShippingQuote } from '../libs/shipping';
 import { trackPageView } from '../libs/analytics';
 import { charge } from '../libs/payment';
 import { isValidEmail, sendEmail } from '../libs/email';
+import security, { generateCode } from '../libs/security';
 
 vi.mock('../libs/currency');
 vi.mock('../libs/shipping');
@@ -132,5 +134,18 @@ describe('signUp', () => {
 
     expect(args[0]).toBe(email);
     expect(args[1]).toMatch(/welcome/i);
+  });
+});
+
+describe('login', () => {
+  const email = 'student@gmail.com';
+
+  it('should email the one-time login code', async () => {
+    const spy = vi.spyOn(security, 'generateCode');
+
+    await login(email);
+
+    const securityCode = spy.mock.results[0].value.toString();
+    expect(sendEmail).toHaveBeenCalledWith(email, securityCode);
   });
 });
